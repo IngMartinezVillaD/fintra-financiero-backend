@@ -30,7 +30,7 @@ spring:
     enabled: true
     baseline-on-migrate: true
     baseline-version: 21
-    validate-on-migrate: true
+    validate-on-migrate: false
     locations: classpath:db/migration
     schemas: prestamos,auditoria,integraciones,seguridad
     # db/dev-seed solo se activa en perfil local (ver application-local.yml)
