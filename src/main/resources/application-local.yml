@@ -3,6 +3,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/financiera
     username: postgres
     password: bdversion18
+  flyway:
+    locations: classpath:db/migration,classpath:db/dev-seed
   jpa:
     properties:
       hibernate:

@@ -1,6 +1,7 @@
 -- ============================================================
 -- R__seed_dev_usuarios — Usuarios de prueba (solo dev/local)
--- NO ejecutar en producción — usar feature flag o perfil Spring
+-- Esta carpeta (db/dev-seed) solo la carga Flyway en perfil local.
+-- NUNCA se ejecuta en producción.
 -- ============================================================
 
 -- Contraseña de todos: DevPass123! (BCrypt $2a$12$...)
@@ -22,7 +23,7 @@ WHERE (u.username = 'tesoreria'    AND r.nombre = 'TESORERIA')
    OR (u.username = 'consulta'     AND r.nombre = 'CONSULTA')
 ON CONFLICT DO NOTHING;
 
--- Empresa de prueba para dev
+-- Empresas de prueba para dev
 INSERT INTO prestamos.empresas
   (codigo_interno, razon_social, nit, rol_permitido, estado, erp_utilizado,
    cobra_interes, calcula_interes_presunto, aplica_tasa_especial, created_by, updated_by)

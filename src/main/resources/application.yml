@@ -33,6 +33,7 @@ spring:
     validate-on-migrate: true
     locations: classpath:db/migration
     schemas: prestamos,auditoria,integraciones,seguridad
+    # db/dev-seed solo se activa en perfil local (ver application-local.yml)
   data:
     redis:
       host: ${REDIS_HOST:localhost}
