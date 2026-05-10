@@ -17,17 +17,31 @@ public interface IEmpresaRepository extends JpaRepository<EmpresaEntity, Long> {
   boolean existsByCodigoInternoAndIdNot(String codigoInterno, Long id);
   boolean existsByNitAndIdNot(String nit, Long id);
 
-  @Query("""
-      SELECT e FROM EmpresaEntity e
-      WHERE e.deletedAt IS NULL
-        AND (:estado IS NULL OR e.estado = :estado)
-        AND (:rolPermitido IS NULL OR e.rolPermitido = :rolPermitido)
-        AND (:busqueda IS NULL OR (
-             LOWER(e.razonSocial)   LIKE LOWER(CONCAT('%', :busqueda, '%')) OR
-             LOWER(e.codigoInterno) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR
-             LOWER(e.nit)           LIKE LOWER(CONCAT('%', :busqueda, '%'))
-        ))
-      """)
+  @Query(
+      value = """
+          SELECT * FROM prestamos.empresas
+          WHERE deleted_at IS NULL
+            AND (:estado::varchar      IS NULL OR estado        = :estado)
+            AND (:rolPermitido::varchar IS NULL OR rol_permitido = :rolPermitido)
+            AND (:busqueda::varchar     IS NULL OR (
+                 LOWER(razon_social)   LIKE LOWER('%' || :busqueda || '%') OR
+                 LOWER(codigo_interno) LIKE LOWER('%' || :busqueda || '%') OR
+                 LOWER(nit)            LIKE LOWER('%' || :busqueda || '%')
+            ))
+          ORDER BY razon_social ASC
+          """,
+      countQuery = """
+          SELECT COUNT(*) FROM prestamos.empresas
+          WHERE deleted_at IS NULL
+            AND (:estado::varchar      IS NULL OR estado        = :estado)
+            AND (:rolPermitido::varchar IS NULL OR rol_permitido = :rolPermitido)
+            AND (:busqueda::varchar     IS NULL OR (
+                 LOWER(razon_social)   LIKE LOWER('%' || :busqueda || '%') OR
+                 LOWER(codigo_interno) LIKE LOWER('%' || :busqueda || '%') OR
+                 LOWER(nit)            LIKE LOWER('%' || :busqueda || '%')
+            ))
+          """,
+      nativeQuery = true)
   Page<EmpresaEntity> buscar(
       @Param("estado") String estado,
       @Param("rolPermitido") String rolPermitido,

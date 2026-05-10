@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +34,7 @@ public class EmpresaController extends BaseController {
       @RequestParam(required = false) String busqueda,
       @RequestParam(defaultValue = "0")  int page,
       @RequestParam(defaultValue = "10") int size) {
-    var pageable = PageRequest.of(page, size, Sort.by("razonSocial").ascending());
+    var pageable = PageRequest.of(page, size);
     return createSuccessResponse(empresaService.listar(estado, rolPermitido, busqueda, pageable));
   }
 
