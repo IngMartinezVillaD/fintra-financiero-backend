@@ -7,9 +7,13 @@ import co.fintra.financiero.models.repositories.*;
 import co.fintra.financiero.services.interfaces.IEmpresaService;
 import co.fintra.financiero.utils.exception.BusinessException;
 import co.fintra.financiero.utils.exception.CustomException;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +42,30 @@ public class EmpresaServiceImpl implements IEmpresaService {
   @Override
   @Transactional(readOnly = true)
   public Page<EmpresaListItemDto> listar(String estado, String rolPermitido, String busqueda, Pageable pageable) {
-    return empresaRepo.buscar(estado, rolPermitido, busqueda, pageable)
-        .map(this::toListItem);
+    Specification<EmpresaEntity> spec = buildSpec(estado, rolPermitido, busqueda);
+    Pageable sorted = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+        Sort.by("razonSocial").ascending());
+    return empresaRepo.findAll(spec, sorted).map(this::toListItem);
+  }
+
+  private Specification<EmpresaEntity> buildSpec(String estado, String rolPermitido, String busqueda) {
+    return (root, query, cb) -> {
+      var predicates = new ArrayList<Predicate>();
+      predicates.add(cb.isNull(root.get("deletedAt")));
+      if (estado != null && !estado.isBlank())
+        predicates.add(cb.equal(root.get("estado"), estado));
+      if (rolPermitido != null && !rolPermitido.isBlank())
+        predicates.add(cb.equal(root.get("rolPermitido"), rolPermitido));
+      if (busqueda != null && !busqueda.isBlank()) {
+        String pattern = "%" + busqueda.toLowerCase() + "%";
+        predicates.add(cb.or(
+            cb.like(cb.lower(root.get("razonSocial")),   pattern),
+            cb.like(cb.lower(root.get("codigoInterno")), pattern),
+            cb.like(cb.lower(root.get("nit")),           pattern)
+        ));
+      }
+      return cb.and(predicates.toArray(new Predicate[0]));
+    };
   }
 
   @Override
