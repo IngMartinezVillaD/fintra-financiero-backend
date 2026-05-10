@@ -5,6 +5,7 @@ spring:
     password: bdversion18
   flyway:
     locations: classpath:db/migration,classpath:db/dev-seed
+    validate-on-migrate: false
   jpa:
     properties:
       hibernate:
