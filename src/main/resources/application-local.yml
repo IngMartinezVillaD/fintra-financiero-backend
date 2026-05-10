@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/financiera
+    username: postgres
+    password: bdversion18
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
+security:
+  jwt:
+    secret: local-dev-secret-64chars-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx!!
+  cors:
+    allowed-origins: http://localhost:4200
+
+logging:
+  level:
+    root: INFO
+    co.fintra: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.security: DEBUG
