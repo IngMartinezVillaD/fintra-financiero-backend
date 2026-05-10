@@ -86,6 +86,9 @@ public class OperacionEntity {
   @Column(name = "firma_digital_at")
   private OffsetDateTime firmaDigitalAt;
 
+  @Column(name = "firma_digital_documento_id", columnDefinition = "UUID")
+  private java.util.UUID firmaDigitalDocumentoId;
+
   // Desembolso (DS)
   @Column(name = "desembolso_at")
   private OffsetDateTime desembolsoAt;

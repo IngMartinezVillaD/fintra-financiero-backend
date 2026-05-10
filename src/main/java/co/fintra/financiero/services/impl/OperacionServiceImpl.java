@@ -4,11 +4,13 @@ import co.fintra.financiero.dto.request.operaciones.CrearOperacionRequestDto;
 import co.fintra.financiero.dto.response.operaciones.*;
 import co.fintra.financiero.models.entity.*;
 import co.fintra.financiero.models.repositories.*;
+import co.fintra.financiero.services.interfaces.IFirmaDigitalService;
 import co.fintra.financiero.services.interfaces.IOperacionService;
 import co.fintra.financiero.services.interfaces.ITasaPeriodoService;
 import co.fintra.financiero.utils.exception.BusinessException;
 import co.fintra.financiero.utils.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OperacionServiceImpl implements IOperacionService {
 
   private final IOperacionRepository     operacionRepo;
@@ -40,6 +43,7 @@ public class OperacionServiceImpl implements IOperacionService {
   private final ITasaEspecialEmpresaRepository   tasaEspecialRepo;
   private final IUsuarioRepository       usuarioRepo;
   private final ITasaPeriodoService      tasaPeriodoService;
+  private final IFirmaDigitalService     firmaDigitalService;
 
   @Override
   @Transactional(readOnly = true)
@@ -295,6 +299,13 @@ public class OperacionServiceImpl implements IOperacionService {
     op.setAceptacionEmpresaObservacion(observacion);
     op = operacionRepo.save(op);
     registrarEvento(op, "AE", "FD", observacion);
+
+    // Iniciar firma digital automáticamente al aceptar
+    try {
+      firmaDigitalService.iniciarFirma(op.getId());
+    } catch (Exception e) {
+      log.warn("No se pudo iniciar firma automática para op {}: {}", op.getId(), e.getMessage());
+    }
 
     return toResponseDto(op, List.of(), null);
   }

@@ -74,6 +74,16 @@ security:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
 
+integraciones:
+  thomas-signe:
+    base-url: ${TS_BASE_URL:https://mock.thomassigne.com/api}
+    api-key: ${TS_API_KEY:mock-api-key}
+    webhook-secret: ${TS_WEBHOOK_SECRET:fintra-webhook-secret-2026}
+    timeout-ms: 10000
+    expiracion-firma-dias: 15
+  documentos:
+    storage-path: ${DOCS_STORAGE_PATH:/tmp/fintra-docs}
+
 logging:
   level:
     root: INFO
