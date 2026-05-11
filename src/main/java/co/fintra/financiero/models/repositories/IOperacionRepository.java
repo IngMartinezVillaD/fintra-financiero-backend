@@ -17,19 +17,19 @@ public interface IOperacionRepository extends JpaRepository<OperacionEntity, Lon
   @Query(value = """
       SELECT * FROM prestamos.operaciones
       WHERE deleted_at IS NULL
-        AND (:estado::varchar          IS NULL OR estado_pipeline              = :estado)
-        AND (:prestamistaId::bigint    IS NULL OR empresa_prestamista_id       = :prestamistaId)
-        AND (:prestatariaId::bigint    IS NULL OR empresa_prestataria_id       = :prestatariaId)
-        AND (:referencia::varchar      IS NULL OR LOWER(referencia) LIKE LOWER('%' || :referencia || '%'))
+        AND (CAST(:estado AS varchar)       IS NULL OR estado_pipeline        = :estado)
+        AND (CAST(:prestamistaId AS bigint) IS NULL OR empresa_prestamista_id = :prestamistaId)
+        AND (CAST(:prestatariaId AS bigint) IS NULL OR empresa_prestataria_id = :prestatariaId)
+        AND (CAST(:referencia AS varchar)   IS NULL OR LOWER(referencia) LIKE LOWER('%' || :referencia || '%'))
       ORDER BY created_at DESC
       """,
       countQuery = """
       SELECT COUNT(*) FROM prestamos.operaciones
       WHERE deleted_at IS NULL
-        AND (:estado::varchar          IS NULL OR estado_pipeline              = :estado)
-        AND (:prestamistaId::bigint    IS NULL OR empresa_prestamista_id       = :prestamistaId)
-        AND (:prestatariaId::bigint    IS NULL OR empresa_prestataria_id       = :prestatariaId)
-        AND (:referencia::varchar      IS NULL OR LOWER(referencia) LIKE LOWER('%' || :referencia || '%'))
+        AND (CAST(:estado AS varchar)       IS NULL OR estado_pipeline        = :estado)
+        AND (CAST(:prestamistaId AS bigint) IS NULL OR empresa_prestamista_id = :prestamistaId)
+        AND (CAST(:prestatariaId AS bigint) IS NULL OR empresa_prestataria_id = :prestatariaId)
+        AND (CAST(:referencia AS varchar)   IS NULL OR LOWER(referencia) LIKE LOWER('%' || :referencia || '%'))
       """,
       nativeQuery = true)
   Page<OperacionEntity> buscar(
