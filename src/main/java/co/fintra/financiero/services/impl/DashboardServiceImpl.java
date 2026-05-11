@@ -74,13 +74,17 @@ public class DashboardServiceImpl implements IDashboardService {
 
   @Override
   public List<EvolucionMensualDto> evolucionMensual(LocalDate desde, LocalDate hasta, Long empresaId) {
+    String filtroEmpresa = empresaId != null
+        ? "AND (o.empresa_prestamista_id = " + empresaId + " OR o.empresa_prestataria_id = " + empresaId + ")"
+        : "";
+
     String sql = """
         SELECT
-          EXTRACT(YEAR  FROM d.fecha)::smallint AS anio,
-          EXTRACT(MONTH FROM d.fecha)::smallint AS mes,
-          COALESCE(SUM(t.saldo_capital), 0)     AS saldo_capital,
-          COALESCE(SUM(lmd.intereses_periodo),0) AS intereses_liquidados,
-          COALESCE(SUM(gmf.monto_gmf), 0)        AS gmf_acumulado
+          CAST(EXTRACT(YEAR  FROM d.fecha) AS smallint) AS anio,
+          CAST(EXTRACT(MONTH FROM d.fecha) AS smallint) AS mes,
+          COALESCE(SUM(t.saldo_capital), 0)             AS saldo_capital,
+          COALESCE(SUM(lmd.intereses_periodo), 0)       AS intereses_liquidados,
+          COALESCE(SUM(gmf.monto_gmf), 0)               AS gmf_acumulado
         FROM prestamos.desembolsos d
           JOIN prestamos.operaciones o ON o.id = d.operacion_id
           LEFT JOIN prestamos.tramos t
@@ -91,10 +95,10 @@ public class DashboardServiceImpl implements IDashboardService {
             ON gmf.operacion_id = o.id
         WHERE o.estado_pipeline = 'DS'
           AND d.fecha >= ? AND d.fecha <= ?
-          AND (? IS NULL OR o.empresa_prestamista_id = ? OR o.empresa_prestataria_id = ?)
+          %s
         GROUP BY 1, 2
         ORDER BY 1, 2
-        """;
+        """.formatted(filtroEmpresa);
 
     return jdbc.query(sql,
         (rs, rowNum) -> {
@@ -108,7 +112,7 @@ public class DashboardServiceImpl implements IDashboardService {
               .gmfAcumulado(rs.getBigDecimal("gmf_acumulado"))
               .build();
         },
-        desde, hasta, empresaId, empresaId, empresaId);
+        desde, hasta);
   }
 
   // ── KPIs ─────────────────────────────────────────────────────────
