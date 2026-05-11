@@ -18,6 +18,7 @@ logs/
 .env
 .env.local
 application-secrets.yml
+src/main/resources/application-local.yml
 
 # OS
 .DS_Store

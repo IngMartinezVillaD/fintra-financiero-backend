@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/financiera
+    url: jdbc:postgresql://localhost:5433/financiera
     username: postgres
     password: bdversion18
   flyway:
