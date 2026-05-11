@@ -487,6 +487,7 @@ public class OperacionServiceImpl implements IOperacionService {
         .cobraInteres(op.getCobraInteres())
         .cuentaOrigenId(op.getCuentaOrigen() != null ? op.getCuentaOrigen().getId() : null)
         .cuentaOrigenDescripcion(cuentaOrigenDesc)
+        .cuentaOrigenExentaGmf(op.getCuentaOrigen() != null ? op.getCuentaOrigen().getExentaGmf() : null)
         .cuentaDestinoId(op.getCuentaDestino() != null ? op.getCuentaDestino().getId() : null)
         .cuentaDestinoDescripcion(cuentaDestinoDesc)
         .montoEstimado(op.getMontoEstimado())

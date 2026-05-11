@@ -35,6 +35,7 @@ public class OperacionResponseDto {
   private OffsetDateTime aceptacionEmpresaAt;
   private String aceptacionEmpresaUsuario;
   private String aceptacionEmpresaObservacion;
+  private Boolean cuentaOrigenExentaGmf;
   private OffsetDateTime firmaDigitalAt;
   private OffsetDateTime desembolsoAt;
   private List<EventoPipelineDto> eventos;

@@ -34,12 +34,8 @@ spring:
     locations: classpath:db/migration
     schemas: prestamos,auditoria,integraciones,seguridad
     # db/dev-seed solo se activa en perfil local (ver application-local.yml)
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
-      timeout: 2000ms
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
   web:
     resources:
       add-mappings: false

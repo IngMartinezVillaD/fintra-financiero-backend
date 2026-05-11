@@ -1,6 +1,6 @@
 # ================================================================
 # docker-compose.dev.yml — Ecosistema de desarrollo BACKEND
-# Levanta: PostgreSQL 18 + pgAdmin + Mailhog + Redis
+# Levanta: PostgreSQL 18
 # Uso: docker compose -f infra/docker/docker-compose.dev.yml up -d
 # ================================================================
 name: fintra-financiero-dev
@@ -30,52 +30,8 @@ services:
     networks:
       - fintra-net
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: fintra-pgadmin
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: dev@fintra.co
-      PGADMIN_DEFAULT_PASSWORD: fintra_dev
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-    ports:
-      - "5050:80"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - fintra-net
-
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: fintra-mailhog
-    restart: unless-stopped
-    ports:
-      - "1025:1025"   # SMTP
-      - "8025:8025"   # UI Web
-    networks:
-      - fintra-net
-
-  redis:
-    image: redis:7-alpine
-    container_name: fintra-redis
-    restart: unless-stopped
-    command: redis-server --appendonly yes
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    networks:
-      - fintra-net
-
 volumes:
   postgres_data:
-  redis_data:
 
 networks:
   fintra-net:
