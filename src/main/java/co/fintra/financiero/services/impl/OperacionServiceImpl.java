@@ -7,10 +7,12 @@ import co.fintra.financiero.models.repositories.*;
 import co.fintra.financiero.services.interfaces.IFirmaDigitalService;
 import co.fintra.financiero.services.interfaces.IOperacionService;
 import co.fintra.financiero.services.interfaces.ITasaPeriodoService;
+import co.fintra.financiero.infrastructure.integration.events.OperacionPipelineEvent;
 import co.fintra.financiero.utils.exception.BusinessException;
 import co.fintra.financiero.utils.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,7 @@ public class OperacionServiceImpl implements IOperacionService {
   private final IUsuarioRepository       usuarioRepo;
   private final ITasaPeriodoService      tasaPeriodoService;
   private final IFirmaDigitalService     firmaDigitalService;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Override
   @Transactional(readOnly = true)
@@ -196,7 +199,8 @@ public class OperacionServiceImpl implements IOperacionService {
     op.setEstadoPipeline("AI");
     op = operacionRepo.save(op);
     registrarEvento(op, "CR", "AI", "Enviado a aprobación interna");
-
+    eventPublisher.publishEvent(new OperacionPipelineEvent(this, op.getId(), op.getReferencia(),
+        "AI", OperacionPipelineEvent.ENVIADA_APROBACION));
     return toResponseDto(op, List.of(), null);
   }
 
@@ -249,7 +253,8 @@ public class OperacionServiceImpl implements IOperacionService {
     op.setAprobacionInternaObservacion(observacion);
     op = operacionRepo.save(op);
     registrarEvento(op, "AI", "AE", observacion);
-
+    eventPublisher.publishEvent(new OperacionPipelineEvent(this, op.getId(), op.getReferencia(),
+        "AE", OperacionPipelineEvent.APROBADA_INTERNAMENTE));
     return toResponseDto(op, List.of(), null);
   }
 
@@ -299,6 +304,8 @@ public class OperacionServiceImpl implements IOperacionService {
     op.setAceptacionEmpresaObservacion(observacion);
     op = operacionRepo.save(op);
     registrarEvento(op, "AE", "FD", observacion);
+    eventPublisher.publishEvent(new OperacionPipelineEvent(this, op.getId(), op.getReferencia(),
+        "FD", OperacionPipelineEvent.ACEPTADA_EMPRESA));
 
     // Iniciar firma digital automáticamente al aceptar
     try {
