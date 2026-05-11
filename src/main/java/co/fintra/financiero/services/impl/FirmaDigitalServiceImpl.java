@@ -146,12 +146,14 @@ public class FirmaDigitalServiceImpl implements IFirmaDigitalService {
 
     switch (evento) {
       case "documento.firmado" -> {
+        // La firma se completa — la operación PERMANECE en FD.
+        // TESORERIA confirma el desembolso manualmente (FD → DS) en el módulo de desembolsos.
         solicitud.setEstado("FIRMADA");
         solicitud.setFirmadoAt(OffsetDateTime.now());
-        op.setEstadoPipeline("DS");
         op.setFirmaDigitalAt(OffsetDateTime.now());
-        registrarEvento(op, estadoAnteriorOp, "DS", "Documento firmado via Thomas Signe. TX: " + transactionId);
-        log.info("Operación {} transicionada FD→DS por firma Thomas Signe", op.getId());
+        registrarEvento(op, estadoAnteriorOp, estadoAnteriorOp,
+            "Firma digital completada por Thomas Signe. TX: " + transactionId + " — pendiente desembolso manual.");
+        log.info("Firma completada para operación {} — sigue en FD, esperando desembolso manual.", op.getId());
       }
       case "documento.rechazado" -> {
         solicitud.setEstado("RECHAZADA");
