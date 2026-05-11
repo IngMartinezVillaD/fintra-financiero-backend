@@ -10,6 +10,6 @@ public class KpiGerencialDto {
   private Double diasPromedioAprobacion;
   private Long operacionesRechazadas;
   private Long operacionesActivas;
-  private Long operacionesEnPipeline;
+  private Long operacionesEnTramite;
   private BigDecimal tasaPromedioPonderada;
 }

@@ -15,13 +15,13 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/dashboard")
 @RequiredArgsConstructor
-@Tag(name = "Dashboard", description = "Consolidado financiero, pipeline e indicadores")
+@Tag(name = "Dashboard", description = "Consolidado financiero, cartera e indicadores")
 public class DashboardController extends BaseController {
 
   private final IDashboardService dashboardService;
 
   @GetMapping
-  @Operation(summary = "Dashboard completo: pipeline, consolidado, alertas, tasas vigentes")
+  @Operation(summary = "Dashboard completo: cartera, consolidado, alertas, tasas vigentes")
   @PreAuthorize("hasAnyAuthority('ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA')")
   public ResponseEntity<ApiResponseDto> dashboard() {
     return createSuccessResponse(dashboardService.dashboard());

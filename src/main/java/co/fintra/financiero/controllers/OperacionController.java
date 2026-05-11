@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/operaciones")
 @RequiredArgsConstructor
-@Tag(name = "Operaciones", description = "Pipeline CR→AI→AE→FD→DS de préstamos intercompañía")
+@Tag(name = "Operaciones", description = "Cartera CR→AI→AE→FD→DS de préstamos intercompañía")
 public class OperacionController extends BaseController {
 
   private final IOperacionService operacionService;
@@ -152,7 +152,7 @@ public class OperacionController extends BaseController {
   }
 
   @GetMapping("/{id}/historial")
-  @Operation(summary = "Historial completo de eventos del pipeline")
+  @Operation(summary = "Historial completo de eventos de la operación")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<ApiResponseDto> historial(@PathVariable Long id) {
     return createSuccessResponse(operacionService.historial(id));

@@ -147,7 +147,7 @@ public class DashboardServiceImpl implements IDashboardService {
         .diasPromedioAprobacion(diasProm != null ? Math.round(diasProm * 10.0) / 10.0 : 0.0)
         .operacionesRechazadas(rechazadas)
         .operacionesActivas(totalDs)
-        .operacionesEnPipeline(enPipeline != null ? enPipeline : 0)
+        .operacionesEnTramite(enPipeline != null ? enPipeline : 0)
         .tasaPromedioPonderada(tasaProm != null ? tasaProm : BigDecimal.ZERO)
         .build();
   }
