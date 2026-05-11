@@ -1,8 +1,8 @@
-package co.fintra.financiero.infrastructure.integration.bitrix24;
+package co.fintra.financiero.infrastructure.bitrix24;
 
-import co.fintra.financiero.infrastructure.integration.NotificacionMessage;
-import co.fintra.financiero.infrastructure.integration.NotificacionPort;
-import co.fintra.financiero.infrastructure.integration.events.OperacionPipelineEvent;
+import co.fintra.financiero.infrastructure.NotificacionMessage;
+import co.fintra.financiero.infrastructure.NotificacionPort;
+import co.fintra.financiero.infrastructure.events.OperacionPipelineEvent;
 import co.fintra.financiero.models.entity.Bitrix24NotificacionEntity;
 import co.fintra.financiero.models.repositories.IBitrix24NotificacionRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;

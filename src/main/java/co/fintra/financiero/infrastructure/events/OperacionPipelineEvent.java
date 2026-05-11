@@ -1,4 +1,4 @@
-package co.fintra.financiero.infrastructure.integration.events;
+package co.fintra.financiero.infrastructure.events;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;

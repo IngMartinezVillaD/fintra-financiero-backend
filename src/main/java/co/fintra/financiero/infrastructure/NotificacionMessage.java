@@ -1,4 +1,4 @@
-package co.fintra.financiero.infrastructure.integration;
+package co.fintra.financiero.infrastructure;
 
 import java.util.Map;
 
