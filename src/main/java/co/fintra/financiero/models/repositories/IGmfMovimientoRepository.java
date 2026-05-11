@@ -10,4 +10,6 @@ public interface IGmfMovimientoRepository extends JpaRepository<GmfMovimientoEnt
   List<GmfMovimientoEntity> findAllByOperacionIdOrderByFechaAsc(Long operacionId);
 
   List<GmfMovimientoEntity> findAllByEmpresaIdAndAnioOrderByMesAsc(Long empresaId, Short anio);
+
+  List<GmfMovimientoEntity> findAllByAnioOrderByMesAsc(Short anio);
 }
