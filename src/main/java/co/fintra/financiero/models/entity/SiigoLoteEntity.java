@@ -29,7 +29,7 @@ public class SiigoLoteEntity {
   @Column(name = "total_registros", nullable = false)
   private Integer totalRegistros = 0;
 
-  @Column(columnDefinition = "JSONB")
+  @Column(columnDefinition = "jsonb")
   private String payload;
 
   @Column(name = "archivo_url", columnDefinition = "TEXT")

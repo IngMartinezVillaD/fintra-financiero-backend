@@ -39,7 +39,8 @@ public class ThomasSigneSolicitudEntity {
   @Column(name = "firmado_at")
   private OffsetDateTime firmadoAt;
 
-  @Column(name = "webhook_payload", columnDefinition = "JSONB")
+  @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
+  @Column(name = "webhook_payload", columnDefinition = "jsonb")
   private String webhookPayload;
 
   @Column(name = "idempotency_key", nullable = false, unique = true, length = 100)

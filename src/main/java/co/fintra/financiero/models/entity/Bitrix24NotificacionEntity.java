@@ -21,7 +21,7 @@ public class Bitrix24NotificacionEntity {
   @Column(name = "evento_codigo", nullable = false, length = 60)
   private String eventoCodigo;
 
-  @Column(nullable = false, columnDefinition = "JSONB")
+  @Column(nullable = false, columnDefinition = "jsonb")
   private String payload;
 
   @Column(nullable = false, length = 20)
