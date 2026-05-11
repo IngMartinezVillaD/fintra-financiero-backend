@@ -130,10 +130,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<BaseErrorResponseDto> handleGeneral(Exception ex) {
     log.error("Error inesperado", ex);
+    String msg = ex.getClass().getSimpleName() + ": " + ex.getMessage();
+    if (ex.getCause() != null) msg += " -> " + ex.getCause().getClass().getSimpleName() + ": " + ex.getCause().getMessage();
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseErrorResponseDto.builder()
         .status(ERROR_STATUS)
         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
         .message("Error inesperado en la aplicación")
+        .errors(new java.util.ArrayList<>(java.util.List.of(msg)))
         .build());
   }
 
