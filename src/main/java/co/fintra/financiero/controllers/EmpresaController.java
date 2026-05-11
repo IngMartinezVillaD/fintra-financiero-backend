@@ -122,7 +122,7 @@ public class EmpresaController extends BaseController {
 
   @PatchMapping("/{id}/tasas-especiales/{tasaId}/aprobar")
   @Operation(summary = "Aprobar tasa especial")
-  @PreAuthorize("hasAuthority('APROBADOR')")
+  @PreAuthorize("hasAnyAuthority('APROBADOR','ADMIN')")
   public ResponseEntity<ApiResponseDto> aprobarTasa(
       @PathVariable Long id,
       @PathVariable Long tasaId,
@@ -133,7 +133,7 @@ public class EmpresaController extends BaseController {
 
   @PatchMapping("/{id}/tasas-especiales/{tasaId}/rechazar")
   @Operation(summary = "Rechazar tasa especial")
-  @PreAuthorize("hasAuthority('APROBADOR')")
+  @PreAuthorize("hasAnyAuthority('APROBADOR','ADMIN')")
   public ResponseEntity<ApiResponseDto> rechazarTasa(
       @PathVariable Long id,
       @PathVariable Long tasaId,

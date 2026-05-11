@@ -52,7 +52,7 @@ public class TasaPeriodoController extends BaseController {
 
   @PatchMapping("/{id}/aprobar")
   @Operation(summary = "Aprobar tasa de período")
-  @PreAuthorize("hasAuthority('APROBADOR')")
+  @PreAuthorize("hasAnyAuthority('APROBADOR','ADMIN')")
   public ResponseEntity<ApiResponseDto> aprobar(
       @PathVariable Long id,
       @RequestBody(required = false) Map<String, String> body) {
@@ -61,7 +61,7 @@ public class TasaPeriodoController extends BaseController {
 
   @PatchMapping("/{id}/rechazar")
   @Operation(summary = "Rechazar tasa de período")
-  @PreAuthorize("hasAuthority('APROBADOR')")
+  @PreAuthorize("hasAnyAuthority('APROBADOR','ADMIN')")
   public ResponseEntity<ApiResponseDto> rechazar(
       @PathVariable Long id,
       @RequestBody Map<String, String> body) {
