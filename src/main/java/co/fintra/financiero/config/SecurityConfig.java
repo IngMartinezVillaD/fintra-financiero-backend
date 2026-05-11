@@ -1,6 +1,7 @@
 package co.fintra.financiero.config;
 
 import co.fintra.financiero.config.security.JwtAuthenticationFilter;
+import co.fintra.financiero.config.security.RateLimitingFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import java.util.List;
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthFilter;
+  private final RateLimitingFilter rateLimitingFilter;
   private final UserDetailsService userDetailsService;
 
   @Value("${security.cors.allowed-origins}")
@@ -74,6 +76,7 @@ public class SecurityConfig {
                   "{\"status\":\"error\",\"code\":403,\"message\":\"Acceso denegado\",\"errors\":null}");
             }))
         .authenticationProvider(authenticationProvider())
+        .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
