@@ -7,7 +7,7 @@ spring:
   mvc:
     dispatch-options-request: true
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/financiera}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/financiera}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:bdversion18}
     driver-class-name: org.postgresql.Driver
