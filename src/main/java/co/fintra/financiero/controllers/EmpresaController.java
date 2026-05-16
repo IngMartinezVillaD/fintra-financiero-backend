@@ -2,6 +2,7 @@ package co.fintra.financiero.controllers;
 
 import co.fintra.financiero.dto.request.empresa.*;
 import co.fintra.financiero.dto.response.ApiResponseDto;
+import co.fintra.financiero.models.repositories.IBancoRepository;
 import co.fintra.financiero.services.interfaces.IEmpresaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,29 @@ import java.util.Map;
 public class EmpresaController extends BaseController {
 
   private final IEmpresaService empresaService;
+  private final IBancoRepository bancoRepo;
+
+  // ──────────────────────────────────────────────── BANCOS
+
+  @GetMapping("/bancos")
+  @Operation(summary = "Listar bancos activos")
+  @PreAuthorize("hasAnyAuthority('ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA')")
+  public ResponseEntity<ApiResponseDto> listarBancos() {
+    var bancos = bancoRepo.findAllByActivoTrueOrderByNombreAsc().stream()
+        .map(b -> Map.of("codigo", b.getCodigo(), "nombre", b.getNombre()))
+        .toList();
+    return createSuccessResponse(bancos);
+  }
+
+  @GetMapping("/cuentas-bancarias")
+  @Operation(summary = "Consulta de todas las cuentas bancarias (todas las empresas)")
+  @PreAuthorize("hasAnyAuthority('ADMIN','TESORERIA','APROBADOR','CONTABILIDAD','CONSULTA')")
+  public ResponseEntity<ApiResponseDto> listarTodasCuentas(
+      @RequestParam(required = false) String bancoCodigo,
+      @RequestParam(required = false) String tipo,
+      @RequestParam(required = false) Boolean activa) {
+    return createSuccessResponse(empresaService.listarTodasCuentasBancarias(bancoCodigo, tipo, activa));
+  }
 
   // ──────────────────────────────────────────────── EMPRESAS
 

@@ -1,17 +1,15 @@
 package co.fintra.financiero.dto.request.empresa;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class CrearEmpresaRequestDto {
-
-  @NotBlank
-  @Pattern(regexp = "^EMP-\\d{2,3}$", message = "Formato inválido. Ejemplo: EMP-01")
-  private String codigoInterno;
 
   @NotBlank @Size(max = 200)
   private String razonSocial;
@@ -24,6 +22,9 @@ public class CrearEmpresaRequestDto {
 
   @Size(max = 100)
   private String ciudad;
+
+  @Size(max = 100)
+  private String departamento;
 
   @NotBlank
   @Pattern(regexp = "PRESTAMISTA|PRESTATARIA|AMBOS", message = "Debe ser PRESTAMISTA, PRESTATARIA o AMBOS")
@@ -60,4 +61,13 @@ public class CrearEmpresaRequestDto {
 
   @DecimalMin("0") @DecimalMax("100")
   private BigDecimal retencionIcaPorcentaje;
+
+  @Pattern(regexp = "ACTIVA|INACTIVA", message = "Debe ser ACTIVA o INACTIVA")
+  private String estado = "ACTIVA";
+
+  @Size(max = 500)
+  private String observaciones;
+
+  @Valid
+  private List<CuentaBancariaRequestDto> cuentasBancarias;
 }

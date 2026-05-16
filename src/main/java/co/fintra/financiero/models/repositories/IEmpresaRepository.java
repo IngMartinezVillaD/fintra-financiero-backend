@@ -20,6 +20,9 @@ public interface IEmpresaRepository extends JpaRepository<EmpresaEntity, Long>,
   boolean existsByCodigoInternoAndIdNot(String codigoInterno, Long id);
   boolean existsByNitAndIdNot(String nit, Long id);
 
+  @Query("SELECT e.codigoInterno FROM EmpresaEntity e WHERE e.codigoInterno LIKE 'EMP-%'")
+  List<String> findAllCodigosInternoEmp();
+
   Optional<EmpresaEntity> findByIdAndDeletedAtIsNull(Long id);
 
   @Query("SELECT COUNT(e) > 0 FROM EmpresaEntity e WHERE e.id = :id AND e.deletedAt IS NULL")

@@ -38,6 +38,9 @@ public class EmpresaEntity {
   @Column(length = 100)
   private String ciudad;
 
+  @Column(length = 100)
+  private String departamento;
+
   @Column(name = "rol_permitido", nullable = false, length = 20)
   private String rolPermitido;
 
@@ -90,6 +93,9 @@ public class EmpresaEntity {
 
   @Column(name = "retencion_ica_porcentaje", precision = 5, scale = 2)
   private BigDecimal retencionIcaPorcentaje;
+
+  @Column(length = 500)
+  private String observaciones;
 
   @Column(name = "deleted_at")
   private OffsetDateTime deletedAt;

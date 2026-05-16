@@ -17,4 +17,6 @@ public interface IEmpresaCuentaBancariaRepository extends JpaRepository<EmpresaC
 
   boolean existsByEmpresaIdAndBancoCodigoAndNumeroCuentaAndIdNotAndDeletedAtIsNull(
       Long empresaId, String bancoCodigo, String numeroCuenta, Long id);
+
+  List<EmpresaCuentaBancariaEntity> findAllByDeletedAtIsNullOrderByEmpresaRazonSocialAscIdAsc();
 }

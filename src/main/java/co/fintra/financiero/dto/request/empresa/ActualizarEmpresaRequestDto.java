@@ -21,6 +21,9 @@ public class ActualizarEmpresaRequestDto {
   @Size(max = 100)
   private String ciudad;
 
+  @Size(max = 100)
+  private String departamento;
+
   @NotBlank
   @Pattern(regexp = "PRESTAMISTA|PRESTATARIA|AMBOS", message = "Debe ser PRESTAMISTA, PRESTATARIA o AMBOS")
   private String rolPermitido;
@@ -56,4 +59,10 @@ public class ActualizarEmpresaRequestDto {
 
   @DecimalMin("0") @DecimalMax("100")
   private BigDecimal retencionIcaPorcentaje;
+
+  @Pattern(regexp = "ACTIVA|INACTIVA", message = "Debe ser ACTIVA o INACTIVA")
+  private String estado;
+
+  @Size(max = 500)
+  private String observaciones;
 }

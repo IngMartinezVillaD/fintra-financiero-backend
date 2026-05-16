@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IEmpresaService {
 
@@ -23,4 +24,6 @@ public interface IEmpresaService {
   TasaEspecialResponseDto aprobarTasaEspecial(Long empresaId, Long tasaId, String observacion);
   TasaEspecialResponseDto rechazarTasaEspecial(Long empresaId, Long tasaId, String observacion);
   List<TasaEspecialResponseDto> listarTasasEspeciales(Long empresaId);
+
+  List<CuentaBancariaConsultaDto> listarTodasCuentasBancarias(String bancoCodigo, String tipo, Boolean activa);
 }

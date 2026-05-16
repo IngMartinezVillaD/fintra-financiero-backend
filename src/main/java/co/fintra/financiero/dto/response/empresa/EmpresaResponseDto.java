@@ -16,6 +16,7 @@ public class EmpresaResponseDto {
   private String nit;
   private String pais;
   private String ciudad;
+  private String departamento;
   private String rolPermitido;
   private String estado;
   private String representanteLegalNombre;
@@ -35,6 +36,7 @@ public class EmpresaResponseDto {
   private Boolean aplicaTasaEspecial;
   private BigDecimal retencionFuentePorcentaje;
   private BigDecimal retencionIcaPorcentaje;
+  private String observaciones;
   private OffsetDateTime createdAt;
   private OffsetDateTime updatedAt;
   private List<CuentaBancariaResponseDto> cuentasBancarias;

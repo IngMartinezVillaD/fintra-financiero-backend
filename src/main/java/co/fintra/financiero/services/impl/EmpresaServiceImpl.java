@@ -2,6 +2,7 @@ package co.fintra.financiero.services.impl;
 
 import co.fintra.financiero.dto.request.empresa.*;
 import co.fintra.financiero.dto.response.empresa.*;
+import co.fintra.financiero.dto.response.empresa.CuentaBancariaConsultaDto;
 import co.fintra.financiero.models.entity.*;
 import co.fintra.financiero.models.repositories.*;
 import co.fintra.financiero.services.interfaces.IEmpresaService;
@@ -77,20 +78,19 @@ public class EmpresaServiceImpl implements IEmpresaService {
 
   @Override
   public EmpresaResponseDto crear(CrearEmpresaRequestDto req) {
-    if (empresaRepo.existsByCodigoInterno(req.getCodigoInterno()))
-      throw new BusinessException("El código interno '" + req.getCodigoInterno() + "' ya existe");
     if (empresaRepo.existsByNit(req.getNit()))
       throw new BusinessException("El NIT '" + req.getNit() + "' ya está registrado");
     validarFlagsEmpresa(req.getCobraInteres(), req.getAplicaTasaEspecial());
 
     EmpresaEntity empresa = EmpresaEntity.builder()
-        .codigoInterno(req.getCodigoInterno())
+        .codigoInterno(generarCodigoInterno())
         .razonSocial(req.getRazonSocial())
         .nit(req.getNit())
         .pais(req.getPais() != null ? req.getPais() : "Colombia")
         .ciudad(req.getCiudad())
+        .departamento(req.getDepartamento())
         .rolPermitido(req.getRolPermitido())
-        .estado("ACTIVA")
+        .estado(req.getEstado() != null ? req.getEstado() : "ACTIVA")
         .representanteLegalNombre(req.getRepresentanteLegalNombre())
         .representanteLegalEmail(req.getRepresentanteLegalEmail())
         .representanteLegalTelefono(req.getRepresentanteLegalTelefono())
@@ -104,6 +104,7 @@ public class EmpresaServiceImpl implements IEmpresaService {
         .aplicaTasaEspecial(Boolean.TRUE.equals(req.getAplicaTasaEspecial()))
         .retencionFuentePorcentaje(req.getRetencionFuentePorcentaje())
         .retencionIcaPorcentaje(req.getRetencionIcaPorcentaje())
+        .observaciones(req.getObservaciones())
         .build();
 
     if (req.getCuentaCxcId() != null)
@@ -113,7 +114,30 @@ public class EmpresaServiceImpl implements IEmpresaService {
       empresa.setCuentaCxp(cuentaContableRepo.findById(req.getCuentaCxpId())
           .orElseThrow(() -> new BusinessException("Cuenta CxP no encontrada")));
 
-    return toResponseDto(empresaRepo.save(empresa));
+    EmpresaEntity saved = empresaRepo.save(empresa);
+
+    if (req.getCuentasBancarias() != null) {
+      for (CuentaBancariaRequestDto cReq : req.getCuentasBancarias()) {
+        BancoEntity banco = bancoRepo.findAll().stream()
+            .filter(b -> b.getCodigo().equals(cReq.getBancoCodigo()))
+            .findFirst()
+            .orElseThrow(() -> new BusinessException("Banco con código '" + cReq.getBancoCodigo() + "' no encontrado"));
+        EmpresaCuentaBancariaEntity cuenta = EmpresaCuentaBancariaEntity.builder()
+            .empresa(saved)
+            .banco(banco)
+            .tipo(cReq.getTipo())
+            .numeroCuenta(cReq.getNumeroCuenta())
+            .titular(cReq.getTitular())
+            .codigoContable(cReq.getCodigoContable())
+            .formatoArchivoPlano(cReq.getFormatoArchivoPlano())
+            .exentaGmf(Boolean.TRUE.equals(cReq.getExentaGmf()))
+            .activa(true)
+            .build();
+        cuentaBancariaRepo.save(cuenta);
+      }
+    }
+
+    return toResponseDto(saved);
   }
 
   @Override
@@ -131,6 +155,7 @@ public class EmpresaServiceImpl implements IEmpresaService {
     if (req.getNit()                  != null) empresa.setNit(req.getNit());
     if (req.getPais()                 != null) empresa.setPais(req.getPais());
     if (req.getCiudad()               != null) empresa.setCiudad(req.getCiudad());
+    if (req.getDepartamento()         != null) empresa.setDepartamento(req.getDepartamento());
     if (req.getRolPermitido()         != null) empresa.setRolPermitido(req.getRolPermitido());
     if (req.getRepresentanteLegalNombre()   != null) empresa.setRepresentanteLegalNombre(req.getRepresentanteLegalNombre());
     if (req.getRepresentanteLegalEmail()    != null) empresa.setRepresentanteLegalEmail(req.getRepresentanteLegalEmail());
@@ -145,6 +170,8 @@ public class EmpresaServiceImpl implements IEmpresaService {
     if (req.getAplicaTasaEspecial()   != null) empresa.setAplicaTasaEspecial(req.getAplicaTasaEspecial());
     if (req.getRetencionFuentePorcentaje() != null) empresa.setRetencionFuentePorcentaje(req.getRetencionFuentePorcentaje());
     if (req.getRetencionIcaPorcentaje()    != null) empresa.setRetencionIcaPorcentaje(req.getRetencionIcaPorcentaje());
+    if (req.getEstado()                    != null) empresa.setEstado(req.getEstado());
+    if (req.getObservaciones()             != null) empresa.setObservaciones(req.getObservaciones());
 
     if (req.getCuentaCxcId() != null)
       empresa.setCuentaCxc(cuentaContableRepo.findById(req.getCuentaCxcId())
@@ -298,6 +325,45 @@ public class EmpresaServiceImpl implements IEmpresaService {
 
   // ──────────────────────────────────────────────────────── HELPERS
 
+  @Override
+  @Transactional(readOnly = true)
+  public List<CuentaBancariaConsultaDto> listarTodasCuentasBancarias(String bancoCodigo, String tipo, Boolean activa) {
+    return cuentaBancariaRepo.findAllByDeletedAtIsNullOrderByEmpresaRazonSocialAscIdAsc()
+        .stream()
+        .filter(c -> bancoCodigo == null || bancoCodigo.isBlank() || c.getBanco().getCodigo().equals(bancoCodigo))
+        .filter(c -> tipo      == null || tipo.isBlank()      || c.getTipo().equals(tipo))
+        .filter(c -> activa    == null                        || c.getActiva().equals(activa))
+        .map(c -> CuentaBancariaConsultaDto.builder()
+            .id(c.getId())
+            .empresaId(c.getEmpresa().getId())
+            .empresaCodigo(c.getEmpresa().getCodigoInterno())
+            .empresaNombre(c.getEmpresa().getRazonSocial())
+            .bancoCodigo(c.getBanco().getCodigo())
+            .bancoNombre(c.getBanco().getNombre())
+            .tipo(c.getTipo())
+            .numeroCuenta(c.getNumeroCuenta())
+            .titular(c.getTitular())
+            .codigoContable(c.getCodigoContable())
+            .exentaGmf(c.getExentaGmf())
+            .activa(c.getActiva())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  private String generarCodigoInterno() {
+    int maxNum = empresaRepo.findAllCodigosInternoEmp().stream()
+        .map(c -> c.replaceAll("^EMP-(\\d+)$", "$1"))
+        .filter(s -> s.matches("\\d+"))
+        .mapToInt(Integer::parseInt)
+        .max()
+        .orElse(0);
+    String codigo = String.format("EMP-%02d", maxNum + 1);
+    while (empresaRepo.existsByCodigoInterno(codigo)) {
+      codigo = String.format("EMP-%02d", ++maxNum + 1);
+    }
+    return codigo;
+  }
+
   private EmpresaEntity findEmpresaOrThrow(Long id) {
     return empresaRepo.findByIdAndDeletedAtIsNull(id)
         .orElseThrow(() -> new CustomException("Empresa no encontrada", HttpStatus.NOT_FOUND));
@@ -350,6 +416,7 @@ public class EmpresaServiceImpl implements IEmpresaService {
         .nit(e.getNit())
         .pais(e.getPais())
         .ciudad(e.getCiudad())
+        .departamento(e.getDepartamento())
         .rolPermitido(e.getRolPermitido())
         .estado(e.getEstado())
         .representanteLegalNombre(e.getRepresentanteLegalNombre())
@@ -369,6 +436,7 @@ public class EmpresaServiceImpl implements IEmpresaService {
         .aplicaTasaEspecial(e.getAplicaTasaEspecial())
         .retencionFuentePorcentaje(e.getRetencionFuentePorcentaje())
         .retencionIcaPorcentaje(e.getRetencionIcaPorcentaje())
+        .observaciones(e.getObservaciones())
         .createdAt(e.getCreatedAt())
         .updatedAt(e.getUpdatedAt())
         .cuentasBancarias(cuentas)
