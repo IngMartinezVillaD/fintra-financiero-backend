@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -12,11 +12,11 @@
     <relativePath/>
   </parent>
 
-  <groupId>co.fintra</groupId>
-  <artifactId>financiero</artifactId>
+  <groupId>co.pluto</groupId>
+  <artifactId>pluto</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>fintra-financiero-backend</name>
+  <name>pluto-backend</name>
   <description>Módulo 9 – Préstamos Intercompañía · Fintra S.A.S.</description>
 
   <properties>

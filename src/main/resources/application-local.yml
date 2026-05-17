@@ -1,4 +1,4 @@
-spring:
+﻿spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/financiera
     username: postgres
@@ -24,6 +24,6 @@ security:
 logging:
   level:
     root: INFO
-    co.fintra: DEBUG
+    co.pluto: DEBUG
     org.hibernate.SQL: DEBUG
     org.springframework.security: DEBUG

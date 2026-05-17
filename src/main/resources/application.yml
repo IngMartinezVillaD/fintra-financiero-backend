@@ -1,6 +1,6 @@
-spring:
+﻿spring:
   application:
-    name: fintra-financiero-service
+    name: pluto-service
   threads:
     virtual:
       enabled: true
@@ -44,7 +44,7 @@ spring:
 
 server:
   servlet:
-    context-path: /fintra-financiero-service
+    context-path: /pluto-service
 
 management:
   server:
@@ -66,7 +66,7 @@ springdoc:
 
 security:
   jwt:
-    secret: ${JWT_SECRET:fintra-financiero-secret-key-must-be-at-least-64-characters-long-for-HS512!!}
+    secret: ${JWT_SECRET:pluto-secret-key-must-be-at-least-64-characters-long-for-HS512!!}
     access-token-expiration: 900
     refresh-token-expiration: 43200
   cors:
@@ -76,14 +76,14 @@ integraciones:
   thomas-signe:
     base-url: ${TS_BASE_URL:https://mock.thomassigne.com/api}
     api-key: ${TS_API_KEY:mock-api-key}
-    webhook-secret: ${TS_WEBHOOK_SECRET:fintra-webhook-secret-2026}
+    webhook-secret: ${TS_WEBHOOK_SECRET:pluto-webhook-secret-2026}
     timeout-ms: 10000
     expiracion-firma-dias: 15
   documentos:
-    storage-path: ${DOCS_STORAGE_PATH:/tmp/fintra-docs}
+    storage-path: ${DOCS_STORAGE_PATH:/tmp/pluto-docs}
 
 logging:
   level:
     root: INFO
-    co.fintra: DEBUG
+    co.pluto: DEBUG
     org.hibernate.SQL: WARN
