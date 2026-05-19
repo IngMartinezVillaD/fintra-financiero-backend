@@ -1,4 +1,4 @@
-# Runbook — Rollback de versión
+﻿# Runbook — Rollback de versión
 
 **Uso:** cuando un despliegue en producción introduce un defecto crítico.  
 **Tiempo objetivo de rollback:** < 15 min
@@ -16,10 +16,10 @@
 
 ```bash
 # Ver historial de imágenes desplegadas
-docker images fintra/fintra-financiero-backend --format "{{.Tag}}\t{{.CreatedAt}}"
+docker images pluto/pluto-backend --format "{{.Tag}}\t{{.CreatedAt}}"
 
 # O desde el registro
-docker manifest inspect fintra/fintra-financiero-backend:v1.x.y
+docker manifest inspect pluto/pluto-backend:v1.x.y
 ```
 
 ### 2. Rollback del backend
@@ -44,12 +44,12 @@ docker compose -f infra/docker/docker-compose.prod.yml up -d --no-deps frontend
 
 ```bash
 # Health check backend
-curl -s http://localhost:8080/fintra-financiero-service/actuator/health | jq .status
+curl -s http://localhost:8080/pluto-service/actuator/health | jq .status
 
 # Smoke tests rápidos
 curl -s -o /dev/null -w "%{http_code}" \
   -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/health-check
+  http://localhost:8080/pluto-service/api/v1/health-check
 ```
 
 ### 5. Si la BD requiere rollback (migraciones Flyway)
@@ -58,7 +58,7 @@ curl -s -o /dev/null -w "%{http_code}" \
 
 ```bash
 # Identificar migración problemática
-docker exec fintra-postgres-prod psql -U $DB_USER -d $DB_NAME \
+docker exec pluto-postgres-prod psql -U $DB_USER -d $DB_NAME \
   -c "SELECT version, description, success FROM flyway_schema_history ORDER BY installed_on DESC LIMIT 5;"
 
 # Flyway no soporta rollback automático. Opciones:

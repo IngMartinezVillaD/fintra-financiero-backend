@@ -1,4 +1,4 @@
-# ── Stage 1: Build ───────────────────────────────────────────────
+﻿# ── Stage 1: Build ───────────────────────────────────────────────
 FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /build
 
@@ -13,8 +13,8 @@ RUN ./mvnw package -DskipTests -q
 FROM eclipse-temurin:21-jre-alpine AS runtime
 WORKDIR /app
 
-RUN addgroup -S fintra && adduser -S fintra -G fintra
-USER fintra
+RUN addgroup -S pluto && adduser -S pluto -G pluto
+USER pluto
 
 COPY --from=builder /build/target/*.jar app.jar
 

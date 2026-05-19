@@ -1,4 +1,4 @@
-# Runbook — Incidente: Bloqueo global del sistema por tasas vencidas
+﻿# Runbook — Incidente: Bloqueo global del sistema por tasas vencidas
 
 **Severidad:** Alta  
 **Afectación:** No se pueden crear nuevas operaciones ni confirmar desembolsos.  
@@ -17,7 +17,7 @@
 ```bash
 # 1. Verificar tasas vigentes hoy
 curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/tasas-periodo
+  http://localhost:8080/pluto-service/api/v1/tasas-periodo
 
 # 2. Buscar tasas con estado APROBADA y vigencia_hasta < HOY
 # Salida esperada en bloqueo: [] (lista vacía)

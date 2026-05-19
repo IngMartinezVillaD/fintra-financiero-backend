@@ -1,4 +1,4 @@
-# Runbook — Liquidación mensual interrumpida o fallida
+﻿# Runbook — Liquidación mensual interrumpida o fallida
 
 **Uso:** cuando el cálculo de liquidación mensual falla o queda en estado inconsistente.  
 **Tiempo objetivo:** < 1 hora
@@ -21,14 +21,14 @@
 ```bash
 # 1. Ver estado de la liquidación
 curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales
 
 # 2. Ver detalle de la liquidación con ID específico
 curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales/{id}
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales/{id}
 
 # 3. Revisar logs del motor de liquidación
-docker logs fintra-backend-prod | grep -i "liquidacion\|motor\|ERROR" | tail -50
+docker logs pluto-backend-prod | grep -i "liquidacion\|motor\|ERROR" | tail -50
 ```
 
 ## Resolución
@@ -40,7 +40,7 @@ El motor es **idempotente**: las operaciones ya calculadas se saltean en una seg
 ```bash
 # Reintentar el cálculo (idempotente — no duplica registros)
 curl -X POST -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales/{id}/calcular
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales/{id}/calcular
 ```
 
 ### Caso B — Datos inconsistentes (tramos mal cerrados)
@@ -48,15 +48,15 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Revertir la liquidación (restaura tramos a EN_CURSO)
 curl -X PATCH -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales/{id}/revertir
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales/{id}/revertir
 
 # Verificar que los tramos volvieron a EN_CURSO
 curl -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/fintra-financiero-service/api/v1/operaciones/{opId}/tramos"
+  "http://localhost:8080/pluto-service/api/v1/operaciones/{opId}/tramos"
 
 # Volver a calcular
 curl -X POST -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales/{id}/calcular
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales/{id}/calcular
 ```
 
 ### Caso C — No existe liquidación para el mes
@@ -66,7 +66,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 curl -X POST -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"anio": YYYY, "mes": MM}' \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales
 ```
 
 ## Verificación final
@@ -74,7 +74,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 ```bash
 # Verificar que la liquidación está en PENDIENTE_APROBACION con totales > 0
 curl -H "Authorization: Bearer $TOKEN" \
-  http://localhost:8080/fintra-financiero-service/api/v1/liquidaciones-mensuales/{id} \
+  http://localhost:8080/pluto-service/api/v1/liquidaciones-mensuales/{id} \
   | jq '{estado: .data.estado, totalIntereses: .data.totalInteresesLiquidados, detalle: (.data.detalle | length)}'
 ```
 

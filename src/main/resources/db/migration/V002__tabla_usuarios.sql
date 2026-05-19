@@ -1,4 +1,4 @@
--- ============================================================
+﻿-- ============================================================
 -- V002 — Tabla de usuarios y roles (esquema seguridad)
 -- ============================================================
 
@@ -46,7 +46,7 @@ INSERT INTO seguridad.roles (nombre) VALUES
 -- Usuario admin inicial (password: Admin123!)
 INSERT INTO seguridad.usuarios (username, password, nombre, email, created_by, updated_by)
 VALUES ('admin', '$2b$12$DR7chkw85.golIFqWcX6vu.RugbcWPmgvK2oR951C6tnjmnsdmlIu',
-        'Administrador', 'admin@fintra.co', 'system', 'system');
+        'Administrador', 'admin@pluto.co', 'system', 'system');
 
 INSERT INTO seguridad.usuario_roles (usuario_id, rol_id)
 SELECT u.id, r.id FROM seguridad.usuarios u, seguridad.roles r

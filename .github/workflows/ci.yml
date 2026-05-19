@@ -1,4 +1,4 @@
-name: CI — Backend
+﻿name: CI — Backend
 
 on:
   push:
@@ -94,4 +94,4 @@ jobs:
           context: .
           file: infra/docker/Dockerfile
           push: false
-          tags: fintra/fintra-financiero-backend:${{ github.sha }}
+          tags: pluto/pluto-backend:${{ github.sha }}

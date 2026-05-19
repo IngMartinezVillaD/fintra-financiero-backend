@@ -1,15 +1,15 @@
-# ================================================================
+﻿# ================================================================
 # docker-compose.e2e.yml — Stack para pruebas E2E en CI
 # WireMock simula: Thomas Signe, Bitrix24, Apotheosys
 # Uso: docker compose -f infra/docker/docker-compose.e2e.yml up -d
 # ================================================================
-name: fintra-financiero-e2e
+name: pluto-e2e
 
 services:
 
   postgres:
     image: postgres:18-alpine
-    container_name: fintra-postgres-e2e
+    container_name: pluto-postgres-e2e
     environment:
       POSTGRES_DB: financiera_e2e
       POSTGRES_USER: postgres
@@ -23,15 +23,15 @@ services:
 
   wiremock:
     image: wiremock/wiremock:latest
-    container_name: fintra-wiremock-e2e
+    container_name: pluto-wiremock-e2e
     volumes:
       - ../../src/test/resources/wiremock:/home/wiremock
     command: ["--port", "8888", "--verbose"]
     networks: [e2e-net]
 
   backend:
-    image: fintra/fintra-financiero-backend:e2e
-    container_name: fintra-backend-e2e
+    image: pluto/pluto-backend:e2e
+    container_name: pluto-backend-e2e
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/financiera_e2e
       DB_USER: postgres
@@ -55,12 +55,12 @@ services:
     networks: [e2e-net]
 
   frontend:
-    image: fintra/fintra-financiero-frontend:e2e
-    container_name: fintra-frontend-e2e
+    image: pluto/pluto-frontend:e2e
+    container_name: pluto-frontend-e2e
     ports:
       - "4200:80"
     environment:
-      API_BASE_URL: http://backend:8080/fintra-financiero-service
+      API_BASE_URL: http://backend:8080/pluto-service
     depends_on:
       backend:
         condition: service_healthy

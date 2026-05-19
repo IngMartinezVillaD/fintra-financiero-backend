@@ -1,15 +1,15 @@
-# ================================================================
+﻿# ================================================================
 # docker-compose.prod.yml — Stack productivo completo
 # Uso: docker compose -f infra/docker/docker-compose.prod.yml up -d
 # Requiere: .env.prod con las variables de producción
 # ================================================================
-name: fintra-financiero-prod
+name: pluto-prod
 
 services:
 
   postgres:
     image: postgres:18-alpine
-    container_name: fintra-postgres-prod
+    container_name: pluto-postgres-prod
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -24,11 +24,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
-    networks: [fintra-net]
+    networks: [pluto-net]
 
   backend:
-    image: fintra/fintra-financiero-backend:${APP_VERSION:-latest}
-    container_name: fintra-backend-prod
+    image: pluto/pluto-backend:${APP_VERSION:-latest}
+    container_name: pluto-backend-prod
     restart: unless-stopped
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
@@ -51,25 +51,25 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    networks: [fintra-net]
+    networks: [pluto-net]
 
   frontend:
-    image: fintra/fintra-financiero-frontend:${APP_VERSION:-latest}
-    container_name: fintra-frontend-prod
+    image: pluto/pluto-frontend:${APP_VERSION:-latest}
+    container_name: pluto-frontend-prod
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     environment:
-      API_BASE_URL: http://backend:8080/fintra-financiero-service
+      API_BASE_URL: http://backend:8080/pluto-service
     depends_on:
       backend:
         condition: service_healthy
-    networks: [fintra-net]
+    networks: [pluto-net]
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: fintra-prometheus
+    container_name: pluto-prometheus
     restart: unless-stopped
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -77,11 +77,11 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.retention.time=30d'
-    networks: [fintra-net]
+    networks: [pluto-net]
 
   grafana:
     image: grafana/grafana:latest
-    container_name: fintra-grafana
+    container_name: pluto-grafana
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -91,7 +91,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     depends_on: [prometheus]
-    networks: [fintra-net]
+    networks: [pluto-net]
 
 volumes:
   postgres_data:
@@ -99,5 +99,5 @@ volumes:
   grafana_data:
 
 networks:
-  fintra-net:
+  pluto-net:
     driver: bridge

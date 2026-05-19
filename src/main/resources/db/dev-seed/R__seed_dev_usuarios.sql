@@ -1,4 +1,4 @@
--- ============================================================
+﻿-- ============================================================
 -- R__seed_dev_usuarios — Usuarios de prueba (solo dev/local)
 -- Esta carpeta (db/dev-seed) solo la carga Flyway en perfil local.
 -- NUNCA se ejecuta en producción.
@@ -6,11 +6,11 @@
 
 -- Contraseña de todos: DevPass123! (BCrypt $2a$12$...)
 INSERT INTO seguridad.usuarios (username, password, nombre, email, created_by, updated_by) VALUES
-  ('tesoreria',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Tesorería',          'tesoreria@fintra.co',   'system', 'system'),
-  ('aprobador',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Aprobador',          'aprobador@fintra.co',   'system', 'system'),
-  ('empresa01',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Empresa Receptora',  'empresa01@fintra.co',   'system', 'system'),
-  ('contabilidad','$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Contabilidad',       'contab@fintra.co',      'system', 'system'),
-  ('consulta',    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Solo Lectura',       'consulta@fintra.co',    'system', 'system')
+  ('tesoreria',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Tesorería',          'tesoreria@pluto.co',   'system', 'system'),
+  ('aprobador',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Aprobador',          'aprobador@pluto.co',   'system', 'system'),
+  ('empresa01',   '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Empresa Receptora',  'empresa01@pluto.co',   'system', 'system'),
+  ('contabilidad','$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Contabilidad',       'contab@pluto.co',      'system', 'system'),
+  ('consulta',    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4vQj1l2A6m', 'Usuario Solo Lectura',       'consulta@pluto.co',    'system', 'system')
 ON CONFLICT (username) DO NOTHING;
 
 -- Asignar roles

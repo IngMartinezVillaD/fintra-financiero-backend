@@ -1,4 +1,4 @@
-name: Release — Backend
+﻿name: Release — Backend
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
           file: infra/docker/Dockerfile
           push: true
           tags: |
-            fintra/fintra-financiero-backend:${{ github.ref_name }}
-            fintra/fintra-financiero-backend:latest
+            pluto/pluto-backend:${{ github.ref_name }}
+            pluto/pluto-backend:latest
       - name: GitHub Release
         uses: softprops/action-gh-release@v1
         with:

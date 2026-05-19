@@ -1,17 +1,17 @@
-/**
+﻿/**
  * K6 Load Test — Fintra Financiero Módulo 9
  * Uso: k6 run tests/load/k6-scenarios.js
  * Variables de entorno:
- *   BASE_URL  (default: http://localhost:8080/fintra-financiero-service)
- *   USERNAME  (default: admin@fintra.co)
+ *   BASE_URL  (default: http://localhost:8080/pluto-service)
+ *   USERNAME  (default: admin@pluto.co)
  *   PASSWORD  (default: DevPass123!)
  */
 import http from 'k6/http';
 import { check, group, sleep } from 'k6';
 import { Rate, Trend } from 'k6/metrics';
 
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080/fintra-financiero-service';
-const USERNAME = __ENV.USERNAME  || 'admin@fintra.co';
+const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080/pluto-service';
+const USERNAME = __ENV.USERNAME  || 'admin@pluto.co';
 const PASSWORD = __ENV.PASSWORD  || 'DevPass123!';
 
 // Métricas personalizadas

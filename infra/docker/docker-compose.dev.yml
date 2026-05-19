@@ -1,15 +1,15 @@
-# ================================================================
+﻿# ================================================================
 # docker-compose.dev.yml — Ecosistema de desarrollo BACKEND
 # Levanta: PostgreSQL 18
 # Uso: docker compose -f infra/docker/docker-compose.dev.yml up -d
 # ================================================================
-name: fintra-financiero-dev
+name: pluto-dev
 
 services:
 
   postgres:
     image: postgres:18-alpine
-    container_name: fintra-postgres
+    container_name: pluto-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: financiera
@@ -28,11 +28,11 @@ services:
       retries: 5
       start_period: 20s
     networks:
-      - fintra-net
+      - pluto-net
 
 volumes:
   postgres_data:
 
 networks:
-  fintra-net:
+  pluto-net:
     driver: bridge
